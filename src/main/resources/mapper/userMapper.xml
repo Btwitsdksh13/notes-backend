@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "C:\Users\Acer\Desktop\mybatis-3-mapper.dtd">
+  <mapper namespace = "com.example.note_nest_memo.repository.UserRepository">
+  	
+  	
+  	 <resultMap id="UserResultMap" type="com.example.note_nest_memo.model.User">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="email" column="email"/>
+        <result property="password" column="password"/>
+        <result property="created_at" column="created_at"/>
+    </resultMap>
+    
+    <select id="findByEmailAndPassword" resultMap="UserResultMap" parameterType = "String">
+        SELECT * FROM Users WHERE email = #{email} AND password = #{password}
+    </select>
+    
+    
+    <select id="findByEmail" resultMap="UserResultMap">
+        SELECT * FROM Users WHERE email = #{email}
+    </select>
+    
+    
+   <insert id="insertIntoUser" parameterType = "User" keyProperty = "id" useGeneratedKeys = "true">
+        INSERT INTO Users (name, email, password , created_at)
+        VALUES (#{name}, #{email}, #{password} , #{created_at})
+    </insert>
+    
+     
+     <select id="findUserById" resultMap="UserResultMap" parameterType = "Integer">
+        SELECT * FROM Users WHERE id = #{id}
+    </select>
+    
+      <delete id = "deleteUser" parameterType = "Integer">
+      	DELETE FROM Users WHERE id = #{id}
+      </delete>
+      
+     <delete id = "deleteUserByUserObj" parameterType = "User">
+      	DELETE FROM Users WHERE id = #{id}
+      </delete>
+      
+      <update id="updateUser" parameterType = "Integer">
+        UPDATE Users
+         <set>
+  	    	<if test = "name != null">name = #{name},</if>
+  	    	<if test = "email != null">email = #{email},</if>
+  	    	<if test = "password != null">password = #{password},</if>
+  	    </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="getAllUsers" resultMap="UserResultMap">
+        SELECT * FROM users
+    </select>
+    
+  </mapper>

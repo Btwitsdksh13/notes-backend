@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+  <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "C:\Users\Acer\Desktop\mybatis-3-mapper.dtd">
+  <mapper namespace = "com.example.note_nest_memo.repository.NoteRepository">
+  
+    <resultMap id="NotesResultMap" type="com.example.note_nest_memo.model.Notes">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="created_at" column="created_at"/>
+        <result property="updated_at" column="updated_at"/>
+        <association property="user" column="user_id" javaType="com.example.note_nest_memo.model.User" select="com.example.note_nest_memo.repository.UserRepository.findUserById" />
+    </resultMap>
+    
+     <select id="findByUser" resultMap="NotesResultMap" parameterType = "User">
+        SELECT * FROM Notes WHERE user_id = #{id}
+    </select>
+    
+    <select id="findNoteById" resultMap="NotesResultMap" parameterType = "Integer">
+        SELECT * FROM Notes WHERE id = #{id}
+    </select>
+    
+     <select id="findAllNotes" resultMap="NotesResultMap">
+        SELECT * FROM Notes;
+    </select>
+    
+    <insert id="insertIntoNotes" parameterType = "Notes" keyProperty = "id" useGeneratedKeys = "true">
+        INSERT INTO Notes (title, content, created_at, updated_at, user_id)
+        VALUES (#{title}, #{content}, #{created_at}, #{updated_at}, #{user.id})
+    </insert>
+    
+      <update id="updateNotes" parameterType = "Integer" >
+        UPDATE Notes
+       	  <set>
+  	    	<if test = "title != null">title = #{title},</if>
+  	    	<if test = "content != null">content = #{content},</if>
+  	    	updated_at = CURRENT_TIMESTAMP
+  	    </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteNotes" parameterType = "Integer">
+        DELETE FROM Notes WHERE id = #{id}
+    </delete>
+    
+    <delete id="deleteNodeByObj" parameterType = "Notes">
+        DELETE FROM Notes WHERE id = #{id}
+    </delete>
+ 
+    
+  </mapper>
